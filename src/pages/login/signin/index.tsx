@@ -1,29 +1,43 @@
 import { LockKeyhole, Eye, EyeOff, Mail } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signinSchema, type SignInData } from "../schema";
 import type { LoginComponentProps } from "..";
-import ErrorMsg from "../components/ErrorMsg";
-import FooterMsg from "../components/FooterMsg";
+import ErrorMsg from "../components/errorMsg";
+import FooterMsg from "../components/footerMsg";
 import HeaderMsg from "../components/headerMsg";
 import InputForm from "../components/inputForm";
 import LabelMsg from "../components/labelMsg";
 import SubmitBtn from "../components/submitBtn";
+import { AuthContext } from "../../../contexts/authContext";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function SignIn({ isLogin, setIsLogin }: LoginComponentProps) {
+	const { handleLogin } = useContext(AuthContext)!;
+	const nav = useNavigate();
 	const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
 	const [fieldFocus, setFieldFocus] = useState<string | null>(null);
 	const {
 		reset,
 		register,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, isSubmitting },
 	} = useForm<SignInData>({
 		resolver: zodResolver(signinSchema),
 	});
 	async function submit(data: SignInData) {
-		console.log(data);
+		if (!data) {
+			toast.error("Verifique se todos os campos estao preenchidos!");
+			return;
+		}
+		const response = await handleLogin(data);
+		if (!response) {
+			return;
+		}
+		toast.success("Login, realizado com sucesso!");
+		nav("/");
 	}
 	function fieldFocused(field: string | null) {
 		setFieldFocus(field);
@@ -70,13 +84,14 @@ export default function SignIn({ isLogin, setIsLogin }: LoginComponentProps) {
 						</button>
 					</InputForm>
 					<ErrorMsg>{errors.password?.message}</ErrorMsg>
-					<SubmitBtn label="Entrar" />
+					<SubmitBtn label="Entrar" disabled={isSubmitting} />
 				</form>
 				<FooterMsg
 					label="Não possui uma conta?"
 					linkText="Cadastre-se"
 					onFocus={() => fieldFocused(null)}
 					onClick={() => setIsLogin(false)}
+					disabled={isSubmitting}
 				/>
 			</main>
 		</div>

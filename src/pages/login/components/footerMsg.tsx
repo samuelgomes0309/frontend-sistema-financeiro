@@ -3,6 +3,7 @@ interface FooterMsgProps {
 	linkText: string;
 	onFocus?: () => void;
 	onClick?: () => void;
+	disabled: boolean;
 }
 
 export default function FooterMsg({
@@ -10,6 +11,7 @@ export default function FooterMsg({
 	linkText,
 	onClick,
 	onFocus,
+	disabled,
 }: FooterMsgProps) {
 	return (
 		<section className="flex gap-2">
@@ -18,7 +20,8 @@ export default function FooterMsg({
 				type="button"
 				onFocus={onFocus}
 				onClick={onClick}
-				className="text-secondary hover:text-primary cursor-pointer font-bold transition duration-1000"
+				disabled={disabled}
+				className="text-secondary hover:text-primary cursor-pointer font-bold transition duration-1000 disabled:cursor-not-allowed"
 			>
 				{linkText}
 			</button>
