@@ -4,15 +4,16 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUpSchema, type SignUpData } from "../schema";
 import type { LoginComponentProps } from "..";
-import ErrorMsg from "../components/errorMsg";
+
 import FooterMsg from "../components/footerMsg";
 import HeaderMsg from "../components/headerMsg";
 import LabelMsg from "../components/labelMsg";
 import InputForm from "../components/inputForm";
-import SubmitBtn from "../components/submitBtn";
+import SubmitBtn from "../../../components/submitBtn";
 import { AuthContext } from "../../../contexts/authContext";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import ErrorMsg from "../../../components/errorMsg";
 
 export default function SignUp({ isLogin, setIsLogin }: LoginComponentProps) {
 	const { handleSignUp } = useContext(AuthContext)!;
