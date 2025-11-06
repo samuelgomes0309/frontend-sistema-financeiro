@@ -49,7 +49,6 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
 			return;
 		}
 		try {
-			console.log(token);
 			const response = await api.get<UserPropsRequest>("/users/me", {
 				headers: {
 					Authorization: `Bearer ${token}`,
