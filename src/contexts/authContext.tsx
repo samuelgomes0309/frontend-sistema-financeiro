@@ -22,6 +22,7 @@ interface ContextProps {
 	handleSignUp: (data: SignUpData) => Promise<boolean>;
 	handleLogin: (data: SignInData) => Promise<boolean>;
 	signed: boolean;
+	logOut: () => Promise<void>;
 	loadingAuth: boolean;
 }
 
@@ -98,22 +99,36 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
 				user_id: id,
 			});
 			api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-			handleUserLocalStorage(token, id);
+			handleUserLocalStorage(token);
 			return true;
 		} catch (error: any) {
 			toast.error("Erro ao tentar fazer o login", error?.message);
 			return false;
 		}
 	}
-	function handleUserLocalStorage(token: string, user_id: string) {
-		if (!token || !user_id) {
+	async function logOut() {
+		if (!user) {
+			return;
+		}
+		localStorage.removeItem("@financeT");
+		setUser(null);
+	}
+	function handleUserLocalStorage(token: string) {
+		if (!token) {
 			return;
 		}
 		localStorage.setItem("@financeT", token);
 	}
 	return (
 		<AuthContext.Provider
-			value={{ user, handleSignUp, handleLogin, signed: !!user, loadingAuth }}
+			value={{
+				user,
+				handleSignUp,
+				handleLogin,
+				signed: !!user,
+				loadingAuth,
+				logOut,
+			}}
 		>
 			{children}
 		</AuthContext.Provider>
