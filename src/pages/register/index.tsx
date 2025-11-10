@@ -106,7 +106,7 @@ export default function Register() {
 							<LabelReg message="Valor" />
 							<InputReg
 								icon={BadgeDollarSign}
-								type="number"
+								type="string"
 								error={errors.value?.message}
 								name="value"
 								placeholder="Ex: 199.70"
